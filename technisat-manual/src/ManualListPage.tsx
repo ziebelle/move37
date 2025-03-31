@@ -71,7 +71,7 @@ function ManualListPage() {
     return (
         // Apply full height and flex direction to the main page container
         <div className="manual-list-page">
-            <h1 style={{ marginBottom: '60px' }}>TechniSat SUPPORT</h1>
+            <h1 style={{ marginBottom: '60px', marginTop: '100px' }}>TechniSat SUPPORT</h1>
 
             {/* Container for the two columns */}
             <div className="main-content-columns">

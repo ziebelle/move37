@@ -2,11 +2,11 @@
     padding: 0;
     background-color: var(--background-color-dark);
     min-height: 100vh; /* Use min-height */
-    height: 100vh; /* Force full height */
+    height: 100vh; /* Force full height for vertical centering */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center; /* Center content vertically */
     padding: 2vh 2vw;
     box-sizing: border-box;
     overflow: hidden; /* Prevent page scroll */
