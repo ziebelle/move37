@@ -4,6 +4,8 @@
 
 # Setup
 
+    cd technisat-manual
+    npm install
     npm run dev
 
 # Generate media
