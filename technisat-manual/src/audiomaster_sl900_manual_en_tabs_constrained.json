@@ -1,0 +1,51 @@
+{
+  "title": "Operating Instructions AUDIOMASTER SL 900",
+  "features": [
+    "2.1 channel soundbar with wireless subwoofer"
+  ],
+  "tabs": [
+    {
+      "id": "hardwareInstallation",
+      "title": "Hardware Installation",
+      "type": "steps",
+      "content": {
+        "steps": [
+          "Connect the subwoofer to a power outlet using the included power cable.",
+          "Position the soundbar below or above your TV. For wall mounting, refer to chapter 7 Wall Mounting. Connect the power plug to a power outlet.",
+          "If you have a TV with HDMI-CEC and ARC (Audio Return Channel) connection, you can connect the AUDIOMASTER SL 900 to the TV via the HDMI jack. Check your TV's manual to see if it has a suitable connection.",
+          "Connect a suitable high-speed HDMI cable (not included) to the HDMI jack (10) of the AUDIOMASTER SL 900. Connect the other end of the HDMI cable to the HDMI(ARC) jack of your TV.",
+          "To select the HDMI source, press the HDMI (9) button on the remote control. ARC is displayed.",
+          "If your TV does not have an ARC-compatible HDMI jack, use one of the following options to connect the AUDIOMASTER SL 900 to your TV.",
+          "If your TV does not have an HDMI-CEC ARC compatible connection, you can use the Digital-Optical or Digital-Coaxial connection to connect to the AUDIOMASTER SL 900.",
+          "Connect the Audiomaster with an optical or coaxial cable (not included) to the Optical (7) or Coaxial (8) jack. Connect the other end of the cable to the Optical-Out or Coaxial-Out jack on your TV.",
+          "To select the Optical/Coaxial source, press the OPTI/COAX (11) button on the remote control until OPTI or COAX is displayed.",
+          "If your TV does not have an HDMI-CEC ARC jack or a digital output, you can use the analog audio input Audio-In (6) on the AUDIOMASTER SL 900. Use the included RCA audio cable or a jack <-> jack cable (3.5mm).",
+          "To select the analog audio source, press the USB/AUDIO (10) button on the remote control until AUDI is displayed."
+        ],
+        "note": "The ARC function may need to be activated on the TV first."
+      }
+    },
+    {
+      "id": "usage",
+      "title": "Usage",
+      "type": "steps",
+      "content": {
+        "steps": [
+          "To turn on the AUDIOMASTER SL 900, press the On/Standby (1) button on the remote control or on the side of the device (4).",
+          "After each power on of the AUDIOMASTER SL 900, the subwoofer will also be switched on and connected automatically. The On-/Standby LED (12) lights up green.",
+          "To turn off the AUDIOMASTER SL 900, press the On/Standby (1) button on the remote control, or briefly press the On-/Standby (4) button on the side of the device. The Standby LED (2) lights up red.",
+          "The subwoofer is automatically switched off and the On-/Standby LED (12) lights up red.",
+          "To play back a sound source connected to the AUDIOMASTER SL 900, press the corresponding button on the remote control until the source is displayed. The following will appear in the display: ARC - HDMI, OPTI - Digital Optical, COAX - Digital Coaxial, bt - Bluetooth, USB - USB, AUDI - Audio-In Analog",
+          "To change the volume, press the Volume +/- (4) buttons on the remote control or on the side of the device (5).",
+          "Press the Mute (3) button on the remote control to mute the sound. Press the button again to restore the sound to the previously set volume."
+        ]
+      }
+    },
+    {
+      "id": "softwareInstallation",
+      "title": "Software Installation",
+      "type": "text",
+      "content": "The current software for the AUDIOMASTER SL 900 is available on the TechniSat website www.technisat.de."
+    }
+  ]
+}

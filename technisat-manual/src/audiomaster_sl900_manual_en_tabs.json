@@ -1,0 +1,116 @@
+{
+  "title": "Operating Instructions AUDIOMASTER SL 900",
+  "features": [
+    "2.1 channel soundbar with wireless subwoofer"
+  ],
+  "tabs": [
+    {
+      "id": "introductionAndSafety",
+      "title": "Introduction and Safety",
+      "type": "list",
+      "content": [
+        "Contents",
+        "Figures",
+        "Please read first",
+        "Safety instructions",
+        "Breaks",
+        "Remote control / battery replacement",
+        "Disposal instructions"
+      ]
+    },
+    {
+      "id": "initialSetupAndConnection",
+      "title": "Initial Setup and Connection",
+      "type": "list",
+      "content": [
+        "Initial operation / connection",
+        "Connect to the power grid",
+        "Connect to a TV device",
+        "TV device with HDMI connection",
+        "HDMI Autostart-/stop",
+        "TV device without HDMI connection",
+        "Other connection options"
+      ]
+    },
+    {
+      "id": "operation",
+      "title": "Operation",
+      "type": "list",
+      "content": [
+        "Operation",
+        "Switch on",
+        "Switch off",
+        "Source selection",
+        "Adjust volume",
+        "Equalizer"
+      ]
+    },
+    {
+      "id": "additionalFunctions",
+      "title": "Additional Functions",
+      "type": "list",
+      "content": [
+        "Further functions",
+        "Bluetooth playback",
+        "USB playback",
+        "Check the installed software version"
+      ]
+    },
+    {
+      "id": "wallMountingAndTechnicalData",
+      "title": "Wall Mounting and Technical Data",
+      "type": "list",
+      "content": [
+        "Wall mounting",
+        "Technical data"
+      ]
+    },
+    {
+      "id": "troubleshootingAndNotes",
+      "title": "Troubleshooting and Notes",
+      "type": "list",
+      "content": [
+        "Troubleshooting",
+        "Notes"
+      ]
+    },
+    {
+      "id": "safetyInstructionsDetails",
+      "title": "Safety Instructions Details",
+      "type": "text",
+      "content": "For your protection, you should carefully read the safety precautions before putting your new device into operation.\nThe manufacturer assumes no liability for damage caused by improper handling and failure to observe the safety precautions.\nWith electrical devices, leakage currents can occur due to functional reasons. These are permissible and harmless, even if they can be perceived as a slight \"tingling\". To avoid these leakage currents, the new installation or the interconnection of mains-operated devices (receiver, TV set, etc.) must always be carried out in a de-energized state, i.e. all devices must be disconnected from the mains. Make sure that you always have access to the mains socket in order to disconnect the device from the mains."
+    },
+    {
+      "id": "connectingToTVWithHDMI",
+      "title": "Connecting to TV with HDMI",
+      "type": "steps",
+      "content": {
+        "steps": [
+          "If you have a TV device with HDMI-CEC and ARC (Audio Return Channel) connection, you can connect the AUDIOMASTER SL 900 to the TV via the HDMI socket. Please refer to the operating instructions of your TV device to see if your TV device has a suitable connection.",
+          "To do this, plug a suitable high-speed HDMI cable (not included) into the HDMI socket (10) of the AUDIOMASTER SL 900. Connect the other end of the HDMI cable to the HDMI(ARC) socket of your TV device."
+        ],
+        "note": "The ARC function may need to be activated on the TV device first.\nTo select the HDMI source, press the HDMI (9) button on the remote control. ARC is displayed."
+      }
+    },
+    {
+      "id": "hdmiAutoStartStop",
+      "title": "HDMI Auto Start/Stop",
+      "type": "text",
+      "content": "The AUDIOMASTER SL 900 has an HDMI Autostart-/stop function. If it is connected to a TV device via the HDMI socket and the TV device is switched on, the AUDIOMASTER SL 900 is also switched on or off.\nWith activated HDMI autostart-/stop function, the power consumption in standby is higher.\nTo activate the HDMI autostart-/stop function, switch on the AUDIOMASTER SL 900 and select the HDMI (ARC) input by pressing the HDMI (9) button.\nHold down the HDMI (9) button for approx. 3 seconds until ON appears in the display. The HDMI Autostart-/stop function is now switched on.\nTo switch off the HDMI autostart-/stop function, press the HDMI (9) button again for approx. 3 seconds until OFF appears in the display.\nIn order to be able to use this function, your TV device must support the HDMI CEC protocol. For TechniSat TV devices, please activate the TechniLink function for this purpose. Please refer to the operating instructions of your TV device manufacturer.\nThe HDMI Autostart-/stop function is available from software version 971V6-09052225. You can obtain the current software for the AUDIOMASTER SL 900 on the TechniSat website www.technisat.de."
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "type": "list",
+      "content": [
+        "Problem: Device cannot be switched on. Possible cause: No power. Solution: Check that all devices are properly connected to the mains.",
+        "Problem: Remote control does not respond. Possible cause: Battery exhausted. Solution: Aim the remote control at the infrared receiver. Replace exhausted batteries if necessary.",
+        "Problem: No sound. Possible cause: Mute is active. Solution: Deactivate the mute function with the remote control.",
+        "Problem: USB device is not recognized. Possible cause: USB device is formatted in the wrong file system. Solution: Format USB device in FAT32 file system.",
+        "Problem: No Bluetooth connection. Possible cause: Distance between both devices too large. Solution: Reduce the range (max. 10m).",
+        "Problem: Bluetooth pairing not possible. Possible cause: Pairing process not started. Bluetooth search not activated. Solution: Start the pairing process on both Bluetooth devices.",
+        "Problem: Device switches off automatically after a certain time. Possible cause: Auto standby function is activated. Solution: Continue playback or increase the volume on the music source."
+      ]
+    }
+  ]
+}

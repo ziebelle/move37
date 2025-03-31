@@ -1,161 +1,138 @@
-import { useState, useEffect, useRef } from 'react'; // Added useRef
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
-import manualData from './bda_en.json'; // Import the English JSON data
+import manualDataJson from './audiomaster_sl900_manual_en_tabs_constrained.json'; // Import the JSON data
 
-// Define interfaces for the structure of the manual data
-interface ManualData {
-  title: string;
-  features: string[];
-  specialFeatures: string[];
-  systemRequirements: string[];
-  mediaFocusCardInstallation: StepSection;
-  driverInstallation: StepSection;
-  applicationSoftwareInstallation: StepSection;
-  launchingApplicationPrograms: string;
-}
-
-interface StepSection {
+// --- Interfaces for the NEW JSON Schema ---
+interface StepContent {
   warning?: string;
   steps: string[];
   note?: string;
 }
 
-// Define structure for our sections/tabs
-interface SectionInfo {
-  id: string; // Unique key for the section
+interface TabInfo {
+  id: string; // Unique key for the section, used for assets
   title: string; // Title for the tab
-  content: string[] | StepSection; // Content type
-  hasSubSteps: boolean; // Does this section have navigable sub-steps?
-  imageKey?: string; // Key used for image filenames (if hasSubSteps)
-  isSingleText?: boolean; // Flag for single text sections like 'launch'
+  type: 'list' | 'steps' | 'text'; // Type of content
+  content: string[] | StepContent | string; // Content based on type
 }
+
+interface ManualData {
+  title: string;
+  features: string[];
+  specialFeatures: string[];
+  tabs: TabInfo[]; // Main content organized in tabs
+}
+// --- End Interfaces ---
 
 
 function App() {
-  const [data, setData] = useState<ManualData | null>(null);
-  const [sections, setSections] = useState<SectionInfo[]>([]);
-  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  // State based on the new structure
+  const [manualData, setManualData] = useState<ManualData | null>(null);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [currentSubStepIndex, setCurrentSubStepIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null); // Ref for the audio element
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Load and structure data on mount
+  // Load data on mount
   useEffect(() => {
-    const loadedData = manualData as ManualData;
-    setData(loadedData);
+    // Directly cast the imported JSON to our new ManualData interface
+    const loadedData = manualDataJson as ManualData;
+    setManualData(loadedData);
 
-    // Define the sections based on the loaded data
-    const structuredSections: SectionInfo[] = [
-      { id: 'sysReq', title: 'System Requirements', content: loadedData.systemRequirements, hasSubSteps: false },
-      { id: 'hwInstall', title: 'Hardware Install', content: loadedData.mediaFocusCardInstallation, hasSubSteps: true, imageKey: 'install_card' },
-      { id: 'driverInstall', title: 'Driver Install', content: loadedData.driverInstallation, hasSubSteps: true, imageKey: 'install_driver' },
-      { id: 'swInstall', title: 'Software Install', content: loadedData.applicationSoftwareInstallation, hasSubSteps: true, imageKey: 'install_software' },
-      { id: 'launch', title: 'Launch App', content: { steps: [loadedData.launchingApplicationPrograms] }, hasSubSteps: false, isSingleText: true }, // Added isSingleText flag
-    ];
-    setSections(structuredSections);
-    // Start at the first section that has steps (usually Hardware Install)
-    const firstStepSectionIndex = structuredSections.findIndex(s => s.hasSubSteps);
-    setActiveSectionIndex(firstStepSectionIndex >= 0 ? firstStepSectionIndex : 0);
+    // Optionally, set initial tab to the first 'steps' tab if desired
+    const firstStepsTabIndex = loadedData.tabs.findIndex(tab => tab.type === 'steps');
+    setActiveTabIndex(firstStepsTabIndex >= 0 ? firstStepsTabIndex : 0);
 
   }, []);
 
-  // Reset image error state when section or step changes
+  // Reset image error state when tab or step changes
   useEffect(() => {
     setImageError(false);
-  }, [activeSectionIndex, currentSubStepIndex]);
+  }, [activeTabIndex, currentSubStepIndex]);
 
   // --- Audio Playback ---
   useEffect(() => {
-    if (!sections.length || !audioRef.current) return; // Ensure sections are loaded and ref exists
+    if (!manualData?.tabs.length || !audioRef.current) return;
 
-    const currentSection = sections[activeSectionIndex];
+    const currentTab = manualData.tabs[activeTabIndex];
     let audioPath: string | null = null;
 
-    if (currentSection.hasSubSteps) {
+    if (currentTab.type === 'steps') {
       // Audio for sub-steps
-      audioPath = `/manual_audio/${currentSection.id}_step_${String(currentSubStepIndex).padStart(2, '0')}.wav`;
-    } else if (currentSection.isSingleText) {
+      audioPath = `/manual_audio/${currentTab.id}_step_${String(currentSubStepIndex).padStart(2, '0')}.wav`;
+    } else if (currentTab.type === 'text') {
        // Audio for single text sections
-       audioPath = `/manual_audio/${currentSection.id}_main.wav`;
+       audioPath = `/manual_audio/${currentTab.id}_main.wav`;
     }
-    // Note: No audio playback for list-based sections like System Requirements currently
+    // Add handling for 'list' type if needed
+    // else if (currentTab.type === 'list') {
+    //    // Decide if/how to play audio for lists
+    // }
 
     if (audioPath) {
       audioRef.current.src = audioPath;
-      audioRef.current.load(); // Load the new source
+      audioRef.current.load();
       const playPromise = audioRef.current.play();
-
       if (playPromise !== undefined) {
-        playPromise.then(_ => {
-          // Autoplay started!
-        }).catch(error => {
-          // Autoplay was prevented.
+        playPromise.catch(error => {
           console.warn(`Audio autoplay prevented for ${audioPath}:`, error);
-          // You could potentially show a play button here if needed
         });
       }
     } else {
-        // No audio for this step/section, ensure src is cleared
         audioRef.current.removeAttribute('src');
         audioRef.current.load();
     }
 
-    // Cleanup: Pause audio if component unmounts or dependencies change before playback finishes
     return () => {
         if (audioRef.current && !audioRef.current.paused) {
             audioRef.current.pause();
         }
     };
 
-  }, [activeSectionIndex, currentSubStepIndex, sections]); // Depend on sections as well
+  }, [activeTabIndex, currentSubStepIndex, manualData]); // Depend on manualData
 
 
   // --- Navigation Logic ---
-  const activeSection = sections[activeSectionIndex];
-  const stepsInCurrentSection = activeSection?.hasSubSteps && 'steps' in activeSection.content
-    ? activeSection.content.steps.length
+  const activeTab = manualData?.tabs[activeTabIndex];
+  const stepsInCurrentTab = activeTab?.type === 'steps' && typeof activeTab.content === 'object' && 'steps' in activeTab.content
+    ? activeTab.content.steps.length
     : 0;
 
   const nextSubStep = () => {
-    if (activeSection?.hasSubSteps && currentSubStepIndex < stepsInCurrentSection - 1) {
+    if (activeTab?.type === 'steps' && currentSubStepIndex < stepsInCurrentTab - 1) {
       setCurrentSubStepIndex((prev) => prev + 1);
     }
   };
 
   const prevSubStep = () => {
-    if (activeSection?.hasSubSteps && currentSubStepIndex > 0) {
+    if (activeTab?.type === 'steps' && currentSubStepIndex > 0) {
       setCurrentSubStepIndex((prev) => prev - 1);
     }
   };
 
-  const selectSection = (index: number) => {
-    setActiveSectionIndex(index);
-    setCurrentSubStepIndex(0); // Reset sub-step when changing section
+  const selectTab = (index: number) => {
+    setActiveTabIndex(index);
+    setCurrentSubStepIndex(0); // Reset sub-step when changing tab
   };
 
   // --- Keyboard Navigation ---
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (activeSection?.hasSubSteps) {
+      if (activeTab?.type === 'steps') { // Navigate sub-steps only if current tab is 'steps' type
         if (event.key === 'ArrowRight') {
           nextSubStep();
         } else if (event.key === 'ArrowLeft') {
           prevSubStep();
         }
       }
-      // Add tab navigation? (Optional)
-      // else if (event.key === 'ArrowRight') {
-      //   selectSection(Math.min(activeSectionIndex + 1, sections.length - 1));
-      // } else if (event.key === 'ArrowLeft') {
-      //   selectSection(Math.max(activeSectionIndex - 1, 0));
-      // }
+      // You could add ArrowUp/Down for tab switching if desired
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [activeSection, currentSubStepIndex, stepsInCurrentSection, activeSectionIndex, sections.length]); // Added dependencies
+  }, [activeTab, currentSubStepIndex, stepsInCurrentTab]); // Dependencies updated
 
 
   // --- Rendering Logic ---
@@ -164,77 +141,86 @@ function App() {
     setImageError(true);
   };
 
-  const renderActiveSectionContent = () => {
-    if (!activeSection) return <div>Select a section</div>;
-    const { content, hasSubSteps, imageKey } = activeSection;
+  const renderActiveTabContent = () => {
+    if (!activeTab) return <div>Select a tab</div>;
 
-    if (hasSubSteps && 'steps' in content) {
-      const stepText = content.steps[currentSubStepIndex];
-      const imagePath = imageKey ? `/manual_images/${imageKey}_step_${String(currentSubStepIndex + 1).padStart(2, '0')}.png` : null;
-      const isEvenStep = currentSubStepIndex % 2 === 0;
-      const layoutClass = isEvenStep ? 'layout-image-right' : 'layout-image-left';
-      const animationKey = `${activeSectionIndex}-${currentSubStepIndex}`;
+    const { id: tabId, type, content } = activeTab;
 
-      return (
-        <div key={animationKey} className="step-content single-step animate-fade-in">
-          {content.warning && currentSubStepIndex === 0 && <p className="warning"><strong>Warning:</strong> {content.warning}</p>}
-          <div className={`split-layout ${layoutClass}`}>
-            <div className="text-half">
-              <p><span>{currentSubStepIndex + 1}.</span> {stepText}</p>
+    switch (type) {
+      case 'steps':
+        if (typeof content !== 'object' || !('steps' in content)) return null; // Type guard
+        const stepContent = content as StepContent; // Cast for easier access
+        const stepText = stepContent.steps[currentSubStepIndex];
+        const imagePath = `/manual_images/${tabId}_step_${String(currentSubStepIndex + 1).padStart(2, '0')}.png`;
+        const isEvenStep = currentSubStepIndex % 2 === 0;
+        const layoutClass = isEvenStep ? 'layout-image-right' : 'layout-image-left';
+        const animationKey = `${activeTabIndex}-${currentSubStepIndex}`;
+
+        return (
+          <div key={animationKey} className="step-content single-step animate-fade-in">
+            {stepContent.warning && currentSubStepIndex === 0 && <p className="warning"><strong>Warning:</strong> {stepContent.warning}</p>}
+            <div className={`split-layout ${layoutClass}`}>
+              <div className="text-half">
+                <p><span>{currentSubStepIndex + 1}.</span> {stepText}</p>
+              </div>
+              <div className="image-half">
+                {!imageError ? (
+                    <img
+                      key={imagePath}
+                      src={imagePath}
+                      alt={`Illustration for ${tabId} step ${currentSubStepIndex + 1}`}
+                      className="step-image"
+                      onError={handleImageError}
+                    />
+                ) : (
+                   <div className="image-placeholder">Image not available</div>
+                )}
+              </div>
             </div>
-            <div className="image-half">
-              {imagePath && !imageError ? (
-                  <img
-                    key={imagePath}
-                    src={imagePath}
-                    alt={`Illustration for ${imageKey} step ${currentSubStepIndex + 1}`}
-                    className="step-image"
-                    onError={handleImageError}
-                  />
-              ) : (
-                 <div className="image-placeholder">
-                    {imagePath ? 'Image not available' : 'No image for this step'}
-                 </div>
-              )}
-            </div>
+            {stepContent.note && currentSubStepIndex === stepContent.steps.length - 1 && <p className="note"><em>Note:</em> {stepContent.note}</p>}
           </div>
-          {content.note && currentSubStepIndex === content.steps.length - 1 && <p className="note"><em>Note:</em> {content.note}</p>}
-        </div>
-      );
-    } else if (Array.isArray(content)) {
-      return (
-        <div className="step-content list-content">
-          <ul>
-            {content.map((item, index) => <li key={index}>{item}</li>)}
-          </ul>
-        </div>
-      );
-    } else if ('steps' in content) { // Handles single text sections now
-         return (
-            <div className="step-content single-text">
-                <p>{content.steps[0]}</p>
-            </div>
-         );
+        );
+
+      case 'list':
+        if (!Array.isArray(content)) return null; // Type guard
+        return (
+          <div className="step-content list-content">
+            <ul>
+              {(content as string[]).map((item, index) => <li key={index}>{item}</li>)}
+            </ul>
+          </div>
+        );
+
+      case 'text':
+        if (typeof content !== 'string') return null; // Type guard
+        return (
+          <div className="step-content single-text">
+              <p>{content}</p>
+          </div>
+        );
+
+      default:
+        return <div>Unsupported tab type.</div>;
     }
-    return <div>Content type not recognized.</div>;
   };
 
-  if (!data || sections.length === 0) {
+  if (!manualData) {
     return <div>Loading manual...</div>;
   }
 
   return (
     <div className="App">
       <header>
-        <h1>{data.title}</h1>
+        <h1>{manualData.title}</h1>
+        {/* Tab Navigation using manualData.tabs */}
         <nav className="tabs">
-          {sections.map((section, index) => (
+          {manualData.tabs.map((tab, index) => (
             <button
-              key={section.id}
-              className={`tab ${index === activeSectionIndex ? 'active' : ''}`}
-              onClick={() => selectSection(index)}
+              key={tab.id}
+              className={`tab ${index === activeTabIndex ? 'active' : ''}`}
+              onClick={() => selectTab(index)}
             >
-              {section.title}
+              {tab.title}
             </button>
           ))}
         </nav>
@@ -242,17 +228,18 @@ function App() {
 
       <main>
         <div className="steps-container">
-          {renderActiveSectionContent()}
+          {renderActiveTabContent()}
         </div>
-        {activeSection?.hasSubSteps && (
+        {/* Navigation for sub-steps (only show if active tab is 'steps' type) */}
+        {activeTab?.type === 'steps' && (
           <div className="navigation-buttons">
             <button onClick={prevSubStep} disabled={currentSubStepIndex === 0}>
               Back
             </button>
             <div className="progress-indicator">
-              Step {currentSubStepIndex + 1} of {stepsInCurrentSection}
+              Step {currentSubStepIndex + 1} of {stepsInCurrentTab}
             </div>
-            <button onClick={nextSubStep} disabled={currentSubStepIndex === stepsInCurrentSection - 1}>
+            <button onClick={nextSubStep} disabled={currentSubStepIndex === stepsInCurrentTab - 1}>
               Next
             </button>
           </div>

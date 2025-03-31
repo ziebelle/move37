@@ -198,16 +198,14 @@ main {
 
 .warning, .note {
   padding: 0.8em 1em;
-  margin: 1em 2rem; /* Add horizontal margin to match content padding */
-  border-radius: 4px;
+  margin: 0;
+  border-radius: 0;
   flex-shrink: 0; /* Prevent shrinking if inside flex */
 }
 .warning {
   color: #ffcc00;
   background-color: rgba(255, 204, 0, 0.1);
   border-left: 4px solid #ffcc00;
-  margin: 0;
-  border-radius: 0;
 }
 .note {
   color: #aaa;
