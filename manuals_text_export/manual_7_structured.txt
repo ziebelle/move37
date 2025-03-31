@@ -1,0 +1,22 @@
+# Operating Instructions TechniSat DVR-App for iPad, iPhone, iPod touch
+
+## Software Installation
+
+1. Configure the remote access according to the operating instructions of your TechniSat device.
+2. First, download the “DVR (PVR)” app from the iTunes AppStore and wait until the automatic installation is complete.
+3. The app can be found in the iTunes AppStore under the "Utilities" category.
+4. Alternatively, you can also download the DVR (PVR) app using the following link: http://itunes.apple.com/de/app/dvr-pvr/id387948823?mt=8
+
+## Usage
+
+1. Start the app from the home screen of your iPad, iPhone or iPod touch.
+2. The login screen appears.
+3. The first time you start the app, you must enter the IP/DNS address and the password of your TechniSat device.
+4. Enter the IP address under which your TechniSat device can be reached in the network in the IP address field.
+5. In the Password field, enter the password that you have assigned under the Remote Access menu item in your TechniSat device.
+6. For remote access via the Internet, enter the user name of your DNS service followed by the port number under which your TechniSat device can be reached in the IP address field (e.g. mustermann.dyndns.com:80).
+7. In the Password field, enter the password that you have assigned under the Remote Access menu item in your TechniSat device.
+8. After you have entered the corresponding data as described in points 3.1 or 3.2, tap the Login field.
+9. If the IP/DNS address and password have been entered correctly, the SFI overview will now appear, in which the currently running programs are displayed.
+
+*Note:* Please note: The first time you start the app, loading the SFI data takes some time. During this time, the device may only react to inputs with a delay. For licensing reasons, not all channels can be displayed.

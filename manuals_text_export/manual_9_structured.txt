@@ -1,0 +1,14 @@
+# Operating Instructions TechniSat DVR-App for iPad, iPhone, iPod touch
+
+## Software Installation
+
+1. First, download the “DVR (PVR)” app from the iTunes AppStore and wait until the automatic installation is complete.
+
+*Note:* The app can be found in the iTunes AppStore under the "Utilities" category.
+Alternatively, you can download the DVR (PVR) app using the following link: http://itunes.apple.com/de/app/dvr-pvr/id387948823?mt=8
+
+## Usage
+
+1. Start the app from the home screen of your iPad, iPhone or iPod touch.
+
+*Note:* The login screen appears.

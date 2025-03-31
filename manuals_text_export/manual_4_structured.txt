@@ -1,0 +1,12 @@
+# Operating Instructions TechniPlus / TechniPlus HD
+
+## Hardware Installation
+
+1. Connect the TV cable with F-connector to the F-input [S1] of the measuring device.
+2. Press the PLAN SAT TV [1] button. Using the rotary knob (C), mark TERRESTR., confirm by pressing the rotary knob, then select EUROPE or, if available, the corresponding country.
+3. Then press the MEAS [4] button to exit the plan and open the measurement menu. When the channel is highlighted and blinking, you can select the desired channel from the channel plan using the rotary knob [C]. The AUTODISCOVERY ® function automatically recognizes (with sufficient level) which signal it is (analog, digital, QAM, ...), without having to set the parameters (bandwidth, symbol rate).
+4. Then press the MEAS [4] button again to perform further measurements. Each time MEAS [4] is pressed, the next window in the cycle opens.
+5. If you press and hold the MPEG PICT [5] button for 2", you can switch the TFT on or off to display the picture of the selected signal.
+
+## Usage
+
