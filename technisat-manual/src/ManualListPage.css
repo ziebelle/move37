@@ -93,7 +93,7 @@
 
 /* Area for Search results - allow scrolling */
 .results-area {
-    margin-top: 1.5rem;
+    margin-top: -1rem;
     flex-grow: 1; /* Allow results to fill space */
     overflow-y: auto; /* Allow scrolling for long list */
     text-align: left;
