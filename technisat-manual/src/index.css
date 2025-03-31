@@ -22,19 +22,27 @@
   --border-color: #535bf2;
 }
 
+/* Added for full height */
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* Removed display: flex; */
+  /* Removed place-items: center; */
   min-width: 320px;
   min-height: 100vh;
+  height: 100%; /* Added for full height */
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* Removed max-width: 1280px; */
+  /* Removed margin: 0 auto; */
+  /* Removed padding: 2rem; */
+  /* Removed text-align: center; */
+  width: 100%;  /* Added for full width */
+  height: 100%; /* Added for full height */
 }
 
 
