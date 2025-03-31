@@ -27,11 +27,49 @@
 
 header {
   text-align: center;
-  padding: 1rem; /* Adjust padding */
-  border-bottom: 1px solid var(--primary-color); /* Thinner border */
+  padding: 1rem 1rem 0 1rem; /* Adjust padding, remove bottom padding */
+  border-bottom: 1px solid #444; /* Separator below tabs */
   flex-shrink: 0; /* Prevent shrinking */
   margin-bottom: 0; /* Remove margin */
 }
+
+@media (prefers-color-scheme: light) {
+    header {
+        border-bottom: 1px solid #ddd;
+    }
+}
+
+/* Tab Navigation Styles */
+.tabs {
+  display: flex;
+  justify-content: center; /* Center tabs */
+  margin-top: 1rem; /* Space below title */
+}
+
+.tab {
+  padding: 0.6em 1.2em;
+  margin: 0 0.2em; /* Small gap between tabs */
+  border: none; /* Remove default button border */
+  border-bottom: 3px solid transparent; /* Placeholder for active indicator */
+  background-color: transparent; /* Remove default button background */
+  color: inherit; /* Use default text color */
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border-radius: 4px 4px 0 0; /* Slightly rounded top corners */
+}
+
+.tab:hover {
+  color: var(--primary-color);
+}
+
+.tab.active {
+  border-bottom-color: var(--primary-color);
+  color: var(--primary-color);
+}
+/* End Tab Navigation Styles */
+
 
 main {
   flex-grow: 1; /* Take remaining space */
@@ -44,11 +82,6 @@ main {
 /* Hide product info for now to focus on presentation layout */
 #product-info {
   display: none;
-  /* Or style differently if it should be the first slide */
-  /* margin-bottom: 0;
-  padding: 0;
-  border: none;
-  border-radius: 0; */
 }
 
 #installation-guide {
@@ -70,7 +103,7 @@ main {
   }
 }
 
-/* Remove container styling */
+/* Container for the actual step content */
 .steps-container {
   margin-bottom: 0;
   padding: 0;
@@ -88,16 +121,25 @@ main {
   }
 }
 
-.step-content ol {
+.step-content { /* General styling for content area */
+    /* Add padding or other styles if needed */
+}
+
+.step-content.single-step .step-text-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center text and image */
+    text-align: center;
+}
+
+.step-content ol, .step-content ul {
   padding-left: 25px;
-  list-style-position: inside; /* Keep numbers inside padding */
+  list-style-position: inside; /* Keep numbers/bullets inside padding */
 }
 
 .step-content li {
   margin-bottom: 1.5em; /* Increase spacing */
   line-height: 1.6;
-  /* Consider centering text/image if desired */
-  /* text-align: center; */
 }
 
 .warning {
@@ -132,14 +174,15 @@ main {
     }
 }
 
-/* Navigation at the bottom of the installation guide */
+/* Navigation container for buttons and progress */
 .navigation-buttons {
   display: flex;
-  justify-content: space-between;
-  margin-top: 1rem; /* Add some space above buttons */
+  justify-content: space-between; /* Pushes Back/Next to ends, centers progress */
+  align-items: center; /* Vertically align items */
+  margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #444;
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: light) {
@@ -150,10 +193,13 @@ main {
 
 .progress-indicator {
     text-align: center;
-    margin-top: 0.5rem; /* Reduce space */
+    /* margin-top: 0.5rem; Removed margin-top */
     color: #aaa;
     font-size: 0.9em;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
+    /* Add some horizontal margin if needed */
+    /* margin-left: 1rem; */
+    /* margin-right: 1rem; */
 }
 
 @media (prefers-color-scheme: light) {
@@ -183,8 +229,8 @@ footer {
 /* Adjusted styles for step images in presentation mode */
 .step-image {
   display: block;
-  max-width: 80%; /* Allow image to be large, but not full width */
-  max-height: 60vh; /* Limit height relative to viewport */
+  max-width: 70%; /* Further reduce max width */
+  max-height: 55vh; /* Further reduce max height */
   height: auto;
   margin: 1.5em auto; /* More vertical spacing, centered */
   border-radius: 4px;

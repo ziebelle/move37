@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import manualData from './bda_en.json'; // Import the English JSON data
 
-// Define an interface for the structure of the manual data
+// Define interfaces for the structure of the manual data
 interface ManualData {
   title: string;
-  features: string[];
-  specialFeatures: string[];
-  systemRequirements: string[];
+  features: string[]; // Keep for potential future use, but not displayed in tabs
+  specialFeatures: string[]; // Keep for potential future use
+  systemRequirements: string[]; // Will be a section
   mediaFocusCardInstallation: StepSection;
   driverInstallation: StepSection;
   applicationSoftwareInstallation: StepSection;
-  launchingApplicationPrograms: string;
+  launchingApplicationPrograms: string; // Will be a section
 }
 
 interface StepSection {
@@ -20,150 +20,169 @@ interface StepSection {
   note?: string;
 }
 
-// Map section index to the key used in filenames
-const sectionKeys: { [key: number]: string } = {
-  0: "install_card",
-  1: "install_driver",
-  2: "install_software",
-  // No key for index 3 (final step)
-};
+// Define structure for our sections/tabs
+interface SectionInfo {
+  id: string; // Unique key for the section
+  title: string; // Title for the tab
+  content: string[] | StepSection; // Content type
+  hasSubSteps: boolean; // Does this section have navigable sub-steps?
+  imageKey?: string; // Key used for image filenames (if hasSubSteps)
+}
+
 
 function App() {
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0); // Renamed for clarity
   const [data, setData] = useState<ManualData | null>(null);
+  const [sections, setSections] = useState<SectionInfo[]>([]);
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  const [currentSubStepIndex, setCurrentSubStepIndex] = useState(0);
 
-  // Load data
+  // Load and structure data on mount
   useEffect(() => {
-    setData(manualData as ManualData);
+    const loadedData = manualData as ManualData;
+    setData(loadedData);
+
+    // Define the sections based on the loaded data
+    const structuredSections: SectionInfo[] = [
+      { id: 'sysReq', title: 'System Requirements', content: loadedData.systemRequirements, hasSubSteps: false },
+      { id: 'hwInstall', title: 'Hardware Install', content: loadedData.mediaFocusCardInstallation, hasSubSteps: true, imageKey: 'install_card' },
+      { id: 'driverInstall', title: 'Driver Install', content: loadedData.driverInstallation, hasSubSteps: true, imageKey: 'install_driver' },
+      { id: 'swInstall', title: 'Software Install', content: loadedData.applicationSoftwareInstallation, hasSubSteps: true, imageKey: 'install_software' },
+      { id: 'launch', title: 'Launch App', content: { steps: [loadedData.launchingApplicationPrograms] }, hasSubSteps: false }, // Treat as StepSection for consistency, but no sub-steps/images
+    ];
+    setSections(structuredSections);
+    // Start at the first section that has steps (usually Hardware Install)
+    const firstStepSectionIndex = structuredSections.findIndex(s => s.hasSubSteps);
+    setActiveSectionIndex(firstStepSectionIndex >= 0 ? firstStepSectionIndex : 0);
+
   }, []);
 
-  if (!data) {
-    return <div>Loading manual...</div>;
-  }
+  // --- Navigation Logic ---
+  const activeSection = sections[activeSectionIndex];
+  const stepsInCurrentSection = activeSection?.hasSubSteps && 'steps' in activeSection.content
+    ? activeSection.content.steps.length
+    : 0;
 
-  // Use updated keys to access step data
-  const sectionsContent = [ // Renamed for clarity
-    data.mediaFocusCardInstallation,
-    data.driverInstallation,
-    data.applicationSoftwareInstallation,
-    { steps: [data.launchingApplicationPrograms] } // Treat the final string as a single step section
-  ];
-
-  const totalSections = sectionsContent.length; // Total number of installation phases/sections
-
-  const nextSection = () => { // Renamed for clarity
-    setCurrentSectionIndex((prev) => Math.min(prev + 1, totalSections - 1));
-  };
-
-  const prevSection = () => { // Renamed for clarity
-    setCurrentSectionIndex((prev) => Math.max(prev - 1, 0));
-  };
-
-  // Function to handle image loading errors
-  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    // Optionally hide the image or display a placeholder
-    event.currentTarget.style.display = 'none';
-    // You could also add a placeholder text/element here
-    console.warn(`Image not found or failed to load: ${event.currentTarget.src}`);
-  };
-
-  const renderSectionContent = (sectionIndex: number) => { // Renamed for clarity
-    const sectionData = sectionsContent[sectionIndex];
-    const sectionKey = sectionKeys[sectionIndex]; // Get the key for filenames
-
-    if (!sectionData) return null;
-
-    // Don't try to render images for the final text-only section
-    const isFinalSection = sectionIndex === totalSections - 1;
-
-    return (
-      <div className="step-content">
-        {sectionData.warning && <p className="warning"><strong>Warning:</strong> {sectionData.warning}</p>}
-        <ol>
-          {sectionData.steps.map((stepText, stepIndex) => {
-            // Calculate image path only if it's not the final section
-            const imagePath = !isFinalSection && sectionKey
-              ? `/manual_images/${sectionKey}_step_${String(stepIndex + 1).padStart(2, '0')}.png`
-              : null;
-
-            return (
-              <li key={stepIndex}>
-                {stepText}
-                {imagePath && (
-                  <img
-                    src={imagePath}
-                    alt={`Illustration for ${sectionKey} step ${stepIndex + 1}`}
-                    className="step-image"
-                    onError={handleImageError} // Add error handling
-                  />
-                )}
-              </li>
-            );
-          })}
-        </ol>
-        {sectionData.note && <p className="note"><em>Note:</em> {sectionData.note}</p>}
-      </div>
-    );
-  };
-
-   const getSectionTitle = (sectionIndex: number): string => { // Renamed for clarity
-    switch (sectionIndex) {
-      case 0: return "Step 1: Hardware Installation";
-      case 1: return "Step 2: Driver Installation";
-      case 2: return "Step 3: Application Software Installation";
-      case 3: return "Final: Launch Application";
-      default: return `Step ${sectionIndex + 1}`;
+  const nextSubStep = () => {
+    if (activeSection?.hasSubSteps && currentSubStepIndex < stepsInCurrentSection - 1) {
+      setCurrentSubStepIndex((prev) => prev + 1);
     }
   };
 
+  const prevSubStep = () => {
+    if (activeSection?.hasSubSteps && currentSubStepIndex > 0) {
+      setCurrentSubStepIndex((prev) => prev - 1);
+    }
+  };
+
+  const selectSection = (index: number) => {
+    setActiveSectionIndex(index);
+    setCurrentSubStepIndex(0); // Reset sub-step when changing section
+  };
+
+  // --- Rendering Logic ---
+
+  // Function to handle image loading errors
+  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.style.display = 'none'; // Hide broken image
+    console.warn(`Image not found or failed to load: ${event.currentTarget.src}`);
+  };
+
+  const renderActiveSectionContent = () => {
+    if (!activeSection) return <div>Select a section</div>;
+
+    const { content, hasSubSteps, imageKey } = activeSection;
+
+    if (hasSubSteps && 'steps' in content) {
+      // Render current sub-step with image
+      const stepText = content.steps[currentSubStepIndex];
+      const imagePath = imageKey
+        ? `/manual_images/${imageKey}_step_${String(currentSubStepIndex + 1).padStart(2, '0')}.png`
+        : null;
+
+      return (
+        <div className="step-content single-step">
+          {/* Display warning/note only if relevant to the current step? Or always for the section? Let's show always for now */}
+          {content.warning && currentSubStepIndex === 0 && <p className="warning"><strong>Warning:</strong> {content.warning}</p>}
+          <div className="step-text-image">
+            <p>{currentSubStepIndex + 1}. {stepText}</p>
+            {imagePath && (
+              <img
+                key={imagePath} // Add key to force re-render on change
+                src={imagePath}
+                alt={`Illustration for ${imageKey} step ${currentSubStepIndex + 1}`}
+                className="step-image"
+                onError={handleImageError}
+              />
+            )}
+          </div>
+          {content.note && currentSubStepIndex === content.steps.length - 1 && <p className="note"><em>Note:</em> {content.note}</p>}
+        </div>
+      );
+    } else if (Array.isArray(content)) {
+      // Render list content (e.g., System Requirements)
+      return (
+        <div className="step-content list-content">
+          <ul>
+            {content.map((item, index) => <li key={index}>{item}</li>)}
+          </ul>
+        </div>
+      );
+    } else if ('steps' in content) {
+        // Render single text content (e.g., Launch App)
+         return (
+            <div className="step-content single-text">
+                <p>{content.steps[0]}</p>
+            </div>
+         );
+    }
+
+    return <div>Content type not recognized.</div>;
+  };
+
+  if (!data || sections.length === 0) {
+    return <div>Loading manual...</div>;
+  }
 
   return (
     <div className="App">
       <header>
         <h1>{data.title}</h1>
+        {/* Tab Navigation */}
+        <nav className="tabs">
+          {sections.map((section, index) => (
+            <button
+              key={section.id}
+              className={`tab ${index === activeSectionIndex ? 'active' : ''}`}
+              onClick={() => selectSection(index)}
+            >
+              {section.title}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main>
-        <section id="product-info">
-          <h2>Product Information</h2>
-          <div className="info-section">
-            <h3>Features</h3>
-            <ul>
-              {data.features.map((item, index) => <li key={index}>{item}</li>)}
-            </ul>
-          </div>
-          <div className="info-section">
-            <h3>Special Features</h3>
-            <ul>
-              {data.specialFeatures.map((item, index) => <li key={index}>{item}</li>)}
-            </ul>
-          </div>
-          <div className="info-section">
-            <h3>System Requirements</h3>
-            <ul>
-              {data.systemRequirements.map((item, index) => <li key={index}>{item}</li>)}
-            </ul>
-          </div>
-        </section>
+        {/* Render only the active section's content */}
+        <div className="steps-container">
+          {renderActiveSectionContent()}
+        </div>
 
-        <section id="installation-guide">
-          <h2>Installation Guide</h2>
-          <div className="steps-container">
-             <h3>{getSectionTitle(currentSectionIndex)}</h3>
-             {renderSectionContent(currentSectionIndex)}
-          </div>
-          <div className="navigation-buttons">
-            <button onClick={prevSection} disabled={currentSectionIndex === 0}>
+        {/* Navigation for sub-steps (only show if section has sub-steps) */}
+        {activeSection?.hasSubSteps && (
+          <div className="navigation-buttons"> {/* Container for buttons and progress */}
+            <button onClick={prevSubStep} disabled={currentSubStepIndex === 0}>
               Back
             </button>
-            <button onClick={nextSection} disabled={currentSectionIndex === totalSections - 1}>
+            {/* Moved progress indicator inside */}
+            <div className="progress-indicator">
+              Step {currentSubStepIndex + 1} of {stepsInCurrentSection}
+              {/* Optionally add section title back if needed: in {activeSection.title} */}
+            </div>
+            <button onClick={nextSubStep} disabled={currentSubStepIndex === stepsInCurrentSection - 1}>
               Next
             </button>
           </div>
-           <div className="progress-indicator">
-             Step {currentSectionIndex + 1} of {totalSections}
-           </div>
-        </section>
+        )}
       </main>
 
       <footer>
