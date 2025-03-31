@@ -13,7 +13,7 @@ MODEL_NAME = "gemini-2.0-flash"
 DATABASE_FILE = 'manuals.db'
 
 # --- File Paths (Modify these) ---
-INPUT_MANUAL_PATH = "ProduktAssets/TechniSat/BDA/BDA_AUDIOMASTER_SL900.pdf" # Example path
+INPUT_MANUAL_PATH = "ProduktAssets/TechniSat/BDA/bda_DigiBox_1_001.pdf" # Example path
 # --- End Configuration ---
 
 # --- Target JSON Schema Description (for prompting the LLM) ---

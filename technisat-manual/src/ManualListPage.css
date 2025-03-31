@@ -1,0 +1,154 @@
+.manual-list-page {
+    padding: 0;
+    background-color: var(--background-color-dark); /* Use main background */
+    /* Full height and flex */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center horizontally */
+    /* Change justify-content to start to keep search at top */
+    justify-content: flex-start;
+    padding-top: 5vh; /* Add some padding from the top */
+    box-sizing: border-box;
+}
+
+/* Container for the actual centered content */
+.list-content-centered {
+    max-width: 800px;
+    width: 90%;
+    padding: 2rem;
+    /* Remove background/shadow if page background is sufficient */
+    /* background-color: var(--card-bg-dark); */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+    text-align: center;
+    /* Allow this container to grow but not shrink */
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-bottom: 2rem; /* Space between search area and results */
+}
+
+
+@media (prefers-color-scheme: light) {
+  .manual-list-page {
+    background-color: var(--background-color-light);
+  }
+   /* Remove specific background for centered content in light mode too */
+   /* .list-content-centered { ... } */
+}
+
+.list-content-centered h1 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.search-container {
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    padding: 0.8em 1.2em;
+    font-size: 1.1em;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: inherit;
+    min-width: 350px;
+    max-width: 90%;
+}
+
+@media (prefers-color-scheme: light) {
+    .search-input {
+        border: 1px solid #ccc;
+        background-color: #fff;
+    }
+}
+
+/* Container for results or prompt */
+.results-container {
+    /* This container will hold the scrollable list or the prompt */
+    max-width: 800px; /* Match the width of the search area */
+    width: 90%;
+    text-align: left;
+    flex-grow: 1; /* Allow this to take remaining space if needed */
+    overflow: hidden; /* Prevent container itself from scrolling */
+    display: flex; /* Use flex to manage list height */
+    flex-direction: column;
+}
+
+.manual-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* max-height: 50vh; Remove fixed max-height */
+    overflow-y: auto; /* Allow only the list to scroll */
+    border: 1px solid #444; /* Optional: Add border around results */
+    border-radius: 6px;
+    background-color: var(--card-bg-dark); /* Background for list */
+}
+
+@media (prefers-color-scheme: light) {
+    .manual-list {
+        border: 1px solid #ddd;
+        background-color: var(--card-bg-light);
+    }
+}
+
+
+.manual-list-item {
+    padding: 0.8rem 1rem; /* Adjust padding */
+    border-bottom: 1px solid #444;
+}
+.manual-list-item:last-child {
+    border-bottom: none;
+}
+
+@media (prefers-color-scheme: light) {
+    .manual-list-item {
+        border-bottom: 1px solid #eee;
+    }
+}
+
+.manual-list-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.manual-list-item a:hover {
+    text-decoration: underline;
+}
+
+/* Hiding source path for now */
+/* .manual-source { ... } */
+
+
+.no-results, .search-prompt {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+    font-style: italic;
+    margin-top: 1.5rem; /* Add margin like results container */
+}
+
+@media (prefers-color-scheme: light) {
+    .no-results, .search-prompt {
+        color: #666;
+    }
+}
+
+/* Re-use loading/error message styles if defined globally, or add basic ones */
+.loading-message, .error-message {
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+}
+.error-message {
+    color: #ff6b6b; /* Light red */
+}
+@media (prefers-color-scheme: light) {
+    .error-message {
+        color: #e53e3e; /* Darker red */
+    }
+}
