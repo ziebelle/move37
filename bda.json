@@ -1,0 +1,64 @@
+{
+  "title": "MediaFocus PCI Sat-Karte Installation und Bedienungsanleitung",
+  "features": [
+    "Empfang analoger Satelliten-TV-Programme und Videotext am PC",
+    "Empfang analoger- und digitaler Radioprogramme (ADR)",
+    "Videotextempfang und Videotextdarstellung"
+  ],
+  "besonderEigenschaften": [
+    "Einfache Installation durch Plug & Play",
+    "Bilddarstellung bis maximal 768x576 für PAL/SECAM",
+    "Vollbild (ohne Fensterrahmen, TV-Bildschirm-Mode)",
+    "Erstellen separater Programmlisten",
+    "Automatischer schneller Sendersuchlauf",
+    "Speicherung senderspezifischer- und allgemeiner Einstellungen",
+    "Hintergrundsuche für Videotextseiten (VTX)",
+    "Speichern und Drucken von VTX-Seiten",
+    "Umfangreiche Optionen zur Konfiguration des SAT-Empfangs (z.B. DiSEqC)"
+  ],
+  "systemVoraussetzungen": [
+    "PC mit Pentium Prozessor, Pentium 133 oder höher",
+    "ein freier busmasterfähiger PCI-Steckplatz",
+    "mindestens 16 MB RAM",
+    "mindestens 20 MB freier Festplattenspeicher",
+    "eine PCI- oder AGP-Grafikkarte (mit mindestens 800x600 Bildpunkten und 16 Bit Farbtiefe)",
+    "Empfohlen: Aktivlautsprecher oder Soundkarte",
+    "ein CD-ROM-Laufwerk (nur für Software Installation benötigt), Microsoft Windows 95 oder Microsoft Windows 98",
+    "Verbindung zu einer Satelliten-Empfangsantenne mit üblichem F-Stecker"
+  ],
+  "installationDerMediaFocusKarte": {
+    "warning": "Beim Einschalten des Stromes während des Einbaus besteht die Gefahr eines Elektroschocks!!! Ebenso sind Beschädigungen von Systemkomponenten und der MediaFocus-Karte nicht auszuschließen.",
+    "steps": [
+      "Vergewissern Sie sich, dass Windows 95 bzw. Windows 98 installiert und konfiguriert ist.",
+      "Fahren Sie Windows herunter und schalten Sie den Computer aus.",
+      "Ziehen Sie vor allen Arbeiten an der Hardware zuerst den Netzstecker Ihres Computers, und entladen Sie dann Ihren Körper statisch, indem Sie ein geerdetes, unlackiertes Gehäuseteil Ihres Computers berühren.",
+      "Nehmen Sie die Gehäuseabdeckung ab. Beachten Sie dazu ggf. die Bedienungsanleitung Ihres Computers.",
+      "Wählen Sie einen freien busmasterfähigen PCI-Steckplatz. In den meisten Computern sind alle PCI-Steckplätze busmasterfähig.",
+      "Entfernen Sie das Slotblech des gewählten leeren PCI-Steckplatzes. Verbinden Sie ggfs. den Audio Eingang analog (CD-ROM Audio Eingang) der MediaFocus-Karte mit dem analogen Audio-Ausgang des CD-ROM-Laufwerkes.",
+      "Verbinden Sie ggf. den Audio Ausgang analog (CD-ROM Audio Ausgang) der MediaFocus-Karte mit dem analogen CD-ROM Audio Eingang der Soundkarte.",
+      "Setzen Sie die PC-Karte in den Steckplatz. Vergewissern Sie sich, dass die Karte richtig in Ihrem Steckplatz sitzt.",
+      "Befestigen Sie die Karte mit der Schraube des Slotblechs und schließen Sie den Computer wieder mit der Gehäuseabdeckung.",
+      "Verbinden Sie Ihre Satelliten-Empfangseinheit mit dem LNB-Eingang (F-Anschluß) der PC-Karte.",
+      "Verbinden Sie ggfs. den Audio-Line-Out Ausgang der PC-Karte mit dem Line-In Eingang der Soundkarte bzw. mit den Aktivlautsprechern."
+    ],
+    "note": "Jetzt können Sie die Treiber und Anwendungssoftware für die Media-Focus-Karte installieren."
+  },
+  "installationDesTreibers": {
+    "steps": [
+      "Schalten Sie Ihren Computer ein.",
+      "Beim Starten von Windows erkennt dieses automatisch die neue Hardware und fordert Sie auf, den Treiber zu installieren.",
+      "Windows fragt Sie nach den Ordnern mit den Treiber-Dateien. Legen Sie die MediaFocus CD-ROM in das CD-ROM-Laufwerk ein und wählen sie dort das Installations-verzeichnis. Folgen Sie den Anweisungen der Windows-Treiberinstallation.",
+      "Nach der Treiber-Installation wird empfohlen, den Computer runterzufahren, auszuschalten und wieder einzuschalten."
+    ]
+  },
+  "installationDerAnwendungssoftware": {
+    "steps": [
+      "Schalten Sie Ihren Computer ein.",
+      "Legen Sie die MediaFocus-CD-ROM in das CD-ROM Laufwerk ein.",
+      "Starten Sie das Setup-Programm Setup.exe",
+      "Folgen Sie den Anweisungen des Installationsprogrammes."
+    ],
+    "note": "Haben Sie Ihr CD-ROM Laufwerk mit der MediaFocus-Karte verbunden, so können Sie Ihren PC so konfigurieren, dass beim Start von Windows 95 bzw. Windows 98 automatisch der Audio Eingang analog auf den Audio Ausgang analog geschaltet wird. Dazu wird bei der Installation das Programm TTCDINIT.exe in Ihrem MediaFocus-Installationsverzeichnis eingerichtet. Auf dieses Programm müssen Sie lediglich eine Verknüpfung in der Windows 95 bzw. Windows 98 Autostart-Gruppe erzeugen. Der Eintrag in der Programm-Gruppe lautet SoundInit."
+  },
+ "aufrufenVonAnwendungsprogrammen": "Nach dem Einbau der MediaFocus-Karte und der Softwareinstallation können Sie über das Menü Programme die MediaFocus-Karte durch anklicken von Manager starten."
+}

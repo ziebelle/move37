@@ -1,0 +1,64 @@
+{
+  "title": "MediaFocus PCI Sat Card Installation and User Manual",
+  "features": [
+    "Reception of analog satellite TV programs and teletext on PC",
+    "Reception of analog and digital radio programs (ADR)",
+    "Teletext reception and display"
+  ],
+  "specialFeatures": [
+    "Easy installation via Plug & Play",
+    "Image display up to maximum 768x576 for PAL/SECAM",
+    "Full screen (without window frame, TV screen mode)",
+    "Creation of separate program lists",
+    "Automatic fast channel scan",
+    "Storage of channel-specific and general settings",
+    "Background search for teletext pages (VTX)",
+    "Saving and printing of VTX pages",
+    "Extensive options for configuring SAT reception (e.g., DiSEqC)"
+  ],
+  "systemRequirements": [
+    "PC with Pentium processor, Pentium 133 or higher",
+    "One free bus-master capable PCI slot",
+    "At least 16 MB RAM",
+    "At least 20 MB free hard disk space",
+    "A PCI or AGP graphics card (with at least 800x600 pixels and 16-bit color depth)",
+    "Recommended: Active speakers or sound card",
+    "A CD-ROM drive (only needed for software installation), Microsoft Windows 95 or Microsoft Windows 98",
+    "Connection to a satellite receiving antenna with standard F-connector"
+  ],
+  "mediaFocusCardInstallation": {
+    "warning": "There is a risk of electric shock if the power is turned on during installation!!! Damage to system components and the MediaFocus card cannot be ruled out either.",
+    "steps": [
+      "Make sure that Windows 95 or Windows 98 is installed and configured.",
+      "Shut down Windows and turn off the computer.",
+      "Before performing any work on the hardware, first unplug the power cord of your computer, and then discharge your body statically by touching a grounded, unpainted housing part of your computer.",
+      "Remove the housing cover. If necessary, refer to the operating instructions for your computer.",
+      "Select a free bus-master capable PCI slot. In most computers, all PCI slots are bus-master capable.",
+      "Remove the slot bracket of the selected empty PCI slot. If necessary, connect the analog audio input (CD-ROM audio input) of the MediaFocus card to the analog audio output of the CD-ROM drive.",
+      "If necessary, connect the analog audio output (CD-ROM audio output) of the MediaFocus card to the analog CD-ROM audio input of the sound card.",
+      "Insert the PC card into the slot. Make sure the card is properly seated in its slot.",
+      "Secure the card with the screw of the slot bracket and close the computer again with the housing cover.",
+      "Connect your satellite receiving unit to the LNB input (F-connector) of the PC card.",
+      "If necessary, connect the audio line-out output of the PC card to the line-in input of the sound card or to the active speakers."
+    ],
+    "note": "Now you can install the drivers and application software for the Media-Focus card."
+  },
+  "driverInstallation": {
+    "steps": [
+      "Turn on your computer.",
+      "When Windows starts, it automatically detects the new hardware and prompts you to install the driver.",
+      "Windows asks you for the folders containing the driver files. Insert the MediaFocus CD-ROM into the CD-ROM drive and select the installation directory there. Follow the instructions of the Windows driver installation.",
+      "After the driver installation, it is recommended to shut down the computer, turn it off, and turn it back on again."
+    ]
+  },
+  "applicationSoftwareInstallation": {
+    "steps": [
+      "Turn on your computer.",
+      "Insert the MediaFocus CD-ROM into the CD-ROM drive.",
+      "Start the setup program Setup.exe",
+      "Follow the instructions of the installation program."
+    ],
+    "note": "If you have connected your CD-ROM drive to the MediaFocus card, you can configure your PC so that the analog audio input is automatically switched to the analog audio output when Windows 95 or Windows 98 starts. For this purpose, the program TTCDINIT.exe is set up in your MediaFocus installation directory during installation. You only need to create a shortcut to this program in the Windows 95 or Windows 98 Startup group. The entry in the program group is SoundInit."
+  },
+ "launchingApplicationPrograms": "After installing the MediaFocus card and the software, you can start the MediaFocus card via the Programs menu by clicking on Manager."
+}

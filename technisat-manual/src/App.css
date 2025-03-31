@@ -1,0 +1,165 @@
+h2 {
+  margin: 0;
+}
+
+.App {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--card-bg-dark);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+@media (prefers-color-scheme: light) {
+  .App {
+    background-color: var(--card-bg-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+#product-info, #installation-guide {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+
+@media (prefers-color-scheme: light) {
+  #product-info, #installation-guide {
+    border: 1px solid #ddd;
+  }
+}
+
+
+#product-info ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin-top: 0.5em;
+}
+
+#product-info li {
+  margin-bottom: 0.5em;
+}
+
+.info-section {
+    margin-bottom: 1.5rem;
+}
+
+.steps-container {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  min-height: 200px; /* Ensure container has some height */
+}
+
+@media (prefers-color-scheme: light) {
+  .steps-container {
+     background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.step-content ol {
+  padding-left: 25px;
+}
+
+.step-content li {
+  margin-bottom: 0.8em;
+  line-height: 1.6;
+}
+
+.warning {
+  color: #ffcc00; /* Amber/Yellow */
+  background-color: rgba(255, 204, 0, 0.1);
+  border-left: 4px solid #ffcc00;
+  padding: 0.8em 1em;
+  margin-bottom: 1em;
+  border-radius: 4px;
+}
+
+.note {
+  color: #aaa; /* Lighter gray */
+  background-color: rgba(170, 170, 170, 0.1);
+  border-left: 4px solid #aaa;
+  padding: 0.8em 1em;
+  margin-top: 1em;
+  border-radius: 4px;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: light) {
+    .warning {
+        color: #c79100;
+        background-color: #fffbeb;
+        border-left-color: #ffcc00;
+    }
+    .note {
+        color: #555;
+        background-color: #f0f0f0;
+        border-left-color: #aaa;
+    }
+}
+
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between; /* Pushes buttons to opposite ends */
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #444;
+}
+
+@media (prefers-color-scheme: light) {
+    .navigation-buttons {
+        border-top: 1px solid #ddd;
+    }
+}
+
+.progress-indicator {
+    text-align: center;
+    margin-top: 1rem;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+@media (prefers-color-scheme: light) {
+    .progress-indicator {
+        color: #555;
+    }
+}
+
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #555;
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+@media (prefers-color-scheme: light) {
+    footer {
+        border-top: 1px solid #ccc;
+        color: #777;
+    }
+}
+
+/* Added styles for step images */
+.step-image {
+  display: block; /* Treat as block for layout */
+  max-width: 100%; /* Prevent exceeding container width */
+  height: auto;    /* Maintain aspect ratio */
+  margin: 1em auto; /* Add vertical spacing and center horizontally */
+  border-radius: 4px; /* Optional: slightly rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
+}
