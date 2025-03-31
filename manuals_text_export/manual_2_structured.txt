@@ -1,9 +1,0 @@
-# Operating Instructions Digital Satellite Receiver DigiBox1
-
-## Hardware Installation
-
-The chapters 4 and 5 describe the connection and adaptation of the receiver to the external unit (mirror, LNB, ...), to the television set, VCR, etc. These settings are unique and only need to be supplemented if something changes on your external unit or additional devices are connected.
-
-## Usage
-
-Chapter 6 describes all the functions that are important for daily use, such as program selection or volume control.
