@@ -61,7 +61,7 @@ function ManualListPage() {
         <div className="manual-list-page">
             {/* Center content container */}
             <div className="list-content-centered">
-                <h1>Search Manuals</h1>
+                <h1>TechniSat Manuals</h1>
 
                 <div className="search-container">
                     <input

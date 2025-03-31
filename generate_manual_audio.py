@@ -5,12 +5,11 @@ from google.cloud import texttospeech
 
 # --- Configuration ---
 PROJECT_ID = 'bliss-hack25fra-9531'
-LOCATION = "europe-central2" # Not strictly needed for TTS, but good practice
+LOCATION = "europe-central2"
 DATABASE_FILE = 'manuals.db'
 OUTPUT_DIR = 'technisat-manual/public/manual_audio'
-# Optional: Customize voice settings
 VOICE_LANGUAGE_CODE = 'en-US'
-VOICE_NAME = 'en-US-Standard-J' # Example voice
+VOICE_NAME = 'en-US-Standard-J'
 AUDIO_ENCODING = texttospeech.AudioEncoding.LINEAR16 # WAV format
 # --- End Configuration ---
 
@@ -26,172 +25,131 @@ def create_connection(db_file):
 
 def synthesize_speech(text, output_filename, client):
     """Synthesizes speech from text and saves to a file using a provided client."""
-    # Basic text cleaning (remove potential SSML-like tags if not intended)
     clean_text = text.replace('<', '').replace('>', '')
     if not clean_text.strip():
         print(f"Skipping empty text for {output_filename}")
         return False
-
     try:
         synthesis_input = texttospeech.SynthesisInput(text=clean_text)
-        voice = texttospeech.VoiceSelectionParams(
-            language_code=VOICE_LANGUAGE_CODE, name=VOICE_NAME
-        )
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=AUDIO_ENCODING # WAV
-        )
+        voice = texttospeech.VoiceSelectionParams(language_code=VOICE_LANGUAGE_CODE, name=VOICE_NAME)
+        audio_config = texttospeech.AudioConfig(audio_encoding=AUDIO_ENCODING)
 
         print(f"Synthesizing audio for: '{clean_text[:60]}...' -> {os.path.basename(output_filename)}")
-        response = client.synthesize_speech(
-            input=synthesis_input, voice=voice, audio_config=audio_config
-        )
+        response = client.synthesize_speech(input=synthesis_input, voice=voice, audio_config=audio_config)
 
-        # Ensure the output directory exists
         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-
-        # Write the response to the output file.
         with open(output_filename, "wb") as out:
             out.write(response.audio_content)
-            # print(f'Audio content written to file "{output_filename}"') # Reduce verbosity
         return True
-
     except Exception as e:
         print(f"Error synthesizing speech for '{clean_text[:60]}...': {e}")
         return False
 
-def get_content_to_process(conn, manual_id=None):
-    """Fetches all relevant text content from the database."""
+def get_content_to_process(conn, manual_id_filter=None): # Renamed arg
+    """Fetches all relevant text content from the database, including manual_id."""
     cursor = conn.cursor()
-    content_items = [] # List to hold tuples: (tab_key, type, order, text)
+    # List to hold tuples: (manual_id, tab_key, type, order/index, text, item_db_id)
+    content_items = []
 
-    # Base query for tabs
-    tab_query = "SELECT tab_id, tab_key, content_type FROM tabs"
+    # Fetch manual_id along with tab info
+    tab_query = "SELECT manual_id, tab_id, tab_key, content_type FROM tabs"
     tab_params = []
-    if manual_id:
+    if manual_id_filter:
         tab_query += " WHERE manual_id = ?"
-        tab_params.append(manual_id)
+        tab_params.append(manual_id_filter)
     tab_query += " ORDER BY manual_id, tab_order;"
 
     try:
         cursor.execute(tab_query, tab_params)
         tabs = cursor.fetchall()
-        print(f"Found {len(tabs)} tabs to process.")
+        print(f"Found {len(tabs)} tabs to process for audio.")
 
-        for tab_id, tab_key, content_type in tabs:
+        for manual_id, tab_id, tab_key, content_type in tabs:
             if content_type == 'steps':
-                cursor.execute("""
-                    SELECT step_order, text FROM tab_content_steps
-                    WHERE tab_id = ? ORDER BY step_order
-                """, (tab_id,))
+                cursor.execute("SELECT step_order, text FROM tab_content_steps WHERE tab_id = ? ORDER BY step_order", (tab_id,))
                 steps = cursor.fetchall()
                 for step_order, text in steps:
-                    # Add step number prefix for clarity in audio
                     audio_text = f"Step {step_order + 1}. {text}"
-                    content_items.append((tab_key, 'step', step_order, audio_text))
+                    item_db_id = f"{tab_key}_step_{step_order:02d}" # ID used for linking
+                    content_items.append((manual_id, tab_key, 'step', step_order, audio_text, item_db_id))
             elif content_type == 'list':
-                 cursor.execute("""
-                     SELECT item_order, text FROM tab_content_list
-                     WHERE tab_id = ? ORDER BY item_order
-                 """, (tab_id,))
+                 cursor.execute("SELECT item_order, text FROM tab_content_list WHERE tab_id = ? ORDER BY item_order", (tab_id,))
                  items = cursor.fetchall()
                  for item_order, text in items:
-                     content_items.append((tab_key, 'item', item_order, text))
+                     item_db_id = f"{tab_key}_item_{item_order:02d}" # ID used for linking
+                     content_items.append((manual_id, tab_key, 'item', item_order, text, item_db_id))
             elif content_type == 'text':
                  cursor.execute("SELECT text FROM tab_content_text WHERE tab_id = ?", (tab_id,))
                  result = cursor.fetchone()
                  if result:
-                     content_items.append((tab_key, 'main', 0, result[0])) # Use 0 for order/index
+                     item_db_id = f"{tab_key}_main" # ID used for linking
+                     content_items.append((manual_id, tab_key, 'main', 0, result[0], item_db_id))
 
         print(f"Found {len(content_items)} total text items to synthesize.")
         return content_items
-
     except sqlite3.Error as e:
         print(f"Database error fetching content: {e}")
         return []
 
 
-def main(manual_id=None):
-    """Main function to fetch text from DB, generate audio, and save them."""
-    if not os.path.exists(DATABASE_FILE):
-        print(f"Error: Database file '{DATABASE_FILE}' not found. Please run setup_database.py and convert_manual_to_db.py first.")
-        return
+def process_audio_for_manual(db_file, output_dir, manual_id_filter=None): # Renamed arg
+    """Processes audio generation for a specific manual_id or all."""
+    if not os.path.exists(db_file): print(f"Error: Database file '{db_file}' not found."); return
 
-    conn = create_connection(DATABASE_FILE)
+    conn = create_connection(db_file)
     if conn is None: return
 
-    # Initialize TTS Client once
+    tts_client = None
     try:
         print("Initializing Google Cloud Text-to-Speech client...")
         tts_client = texttospeech.TextToSpeechClient()
         print("Text-to-Speech client initialized.")
     except Exception as e:
-        print(f"Error initializing Google Cloud Text-to-Speech client: {e}")
-        print("Please ensure credentials (ADC) are configured correctly and the API is enabled.")
-        if conn: conn.close()
-        return
+        print(f"Error initializing TTS client: {e}");
+        if conn: conn.close(); return
 
     try:
-        content_to_process = get_content_to_process(conn, manual_id)
+        content_to_process = get_content_to_process(conn, manual_id_filter)
         total_items = len(content_to_process)
         generated_count = 0
 
-        if total_items == 0:
-            print("No text content found to generate audio for.")
-            return
+        if total_items == 0: print("No text content found."); return
 
-        # Create base output directory if it doesn't exist
-        if not os.path.exists(OUTPUT_DIR):
-            try:
-                os.makedirs(OUTPUT_DIR)
-                print(f"Created output directory: {OUTPUT_DIR}")
-            except OSError as e:
-                print(f"Error creating output directory {OUTPUT_DIR}: {e}")
-                return # Cannot proceed
+        if not os.path.exists(output_dir):
+            try: os.makedirs(output_dir); print(f"Created output directory: {output_dir}")
+            except OSError as e: print(f"Error creating output directory {output_dir}: {e}"); return
 
-        for i, (tab_key, item_type, item_order, text) in enumerate(content_to_process):
-            # Construct filename based on type and order/index
-            if item_type == 'step':
-                filename = f"{tab_key}_step_{item_order:02d}.wav"
-            elif item_type == 'item':
-                filename = f"{tab_key}_item_{item_order:02d}.wav"
-            elif item_type == 'main':
-                filename = f"{tab_key}_main.wav"
-            else:
-                print(f"Warning: Unknown item type '{item_type}'. Skipping.")
-                continue
+        # Iterate through fetched data including manual_id and item_db_id
+        for i, (manual_id, tab_key, item_type, item_order, text, item_db_id) in enumerate(content_to_process):
+            # Construct filename including manual_id and the item's specific ID
+            filename = f"manual_{manual_id}_{item_db_id}.wav"
+            output_filename = os.path.join(output_dir, filename)
 
-            output_filename = os.path.join(OUTPUT_DIR, filename)
-
-            # Optional: Check if audio already exists
             if os.path.exists(output_filename):
                  print(f"Skipping existing audio: {output_filename}")
                  continue
 
             success = synthesize_speech(text, output_filename, tts_client)
-            if success:
-                generated_count += 1
+            if success: generated_count += 1
             print(f"Progress: {i + 1}/{total_items}")
 
-        print(f"\nAudio generation process finished. {generated_count}/{total_items} files generated (or skipped if existing).")
+        print(f"\nAudio generation process finished. {generated_count}/{total_items} files generated (or skipped).")
 
     finally:
-        if conn:
-            conn.close()
-            print("Database connection closed.")
+        if conn: conn.close(); print("Database connection closed.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate audio for manual content stored in the database.")
+    # Keep argument name consistent
     parser.add_argument("-m", "--manual_id", type=int, help="Optional: Process only content for a specific manual_id.")
     args = parser.parse_args()
 
     print("--- Starting Manual Audio Generation Script (DB version) ---")
     print(f"Database: {DATABASE_FILE}")
     print(f"Output Directory: {OUTPUT_DIR}")
-    if args.manual_id:
-        print(f"Processing Manual ID: {args.manual_id}")
-    else:
-        print("Processing all manuals found in DB.")
+    if args.manual_id: print(f"Processing Manual ID: {args.manual_id}")
+    else: print("Processing all manuals found in DB.")
     print("-" * 40)
 
-    main(manual_id=args.manual_id)
+    process_audio_for_manual(DATABASE_FILE, OUTPUT_DIR, manual_id_filter=args.manual_id) # Pass arg correctly
