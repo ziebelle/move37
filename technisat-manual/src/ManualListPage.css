@@ -1,154 +1,121 @@
 .manual-list-page {
     padding: 0;
-    background-color: var(--background-color-dark); /* Use main background */
-    /* Full height and flex */
-    min-height: 100vh;
+    background-color: var(--background-color-dark);
+    min-height: 100vh; /* Use min-height */
+    height: 100vh; /* Force full height */
     display: flex;
-    flex-direction: column; /* Stack content vertically */
-    align-items: center; /* Center horizontally */
-    /* Change justify-content to start to keep search at top */
-    justify-content: flex-start;
-    padding-top: 5vh; /* Add some padding from the top */
-    box-sizing: border-box;
-}
-
-/* Container for the actual centered content */
-.list-content-centered {
-    max-width: 800px;
-    width: 90%;
-    padding: 2rem;
-    /* Remove background/shadow if page background is sufficient */
-    /* background-color: var(--card-bg-dark); */
-    /* border-radius: 8px; */
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-    text-align: center;
-    /* Allow this container to grow but not shrink */
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-bottom: 2rem; /* Space between search area and results */
-}
-
-
-@media (prefers-color-scheme: light) {
-  .manual-list-page {
-    background-color: var(--background-color-light);
-  }
-   /* Remove specific background for centered content in light mode too */
-   /* .list-content-centered { ... } */
-}
-
-.list-content-centered h1 {
-    margin-bottom: 1.5rem;
-    color: var(--primary-color);
-}
-
-.search-container {
-    margin-bottom: 1.5rem;
-}
-
-.search-input {
-    padding: 0.8em 1.2em;
-    font-size: 1.1em;
-    border-radius: 6px;
-    border: 1px solid #555;
-    background-color: #333;
-    color: inherit;
-    min-width: 350px;
-    max-width: 90%;
-}
-
-@media (prefers-color-scheme: light) {
-    .search-input {
-        border: 1px solid #ccc;
-        background-color: #fff;
-    }
-}
-
-/* Container for results or prompt */
-.results-container {
-    /* This container will hold the scrollable list or the prompt */
-    max-width: 800px; /* Match the width of the search area */
-    width: 90%;
-    text-align: left;
-    flex-grow: 1; /* Allow this to take remaining space if needed */
-    overflow: hidden; /* Prevent container itself from scrolling */
-    display: flex; /* Use flex to manage list height */
     flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2vh 2vw;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent page scroll */
 }
 
-.manual-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    /* max-height: 50vh; Remove fixed max-height */
-    overflow-y: auto; /* Allow only the list to scroll */
-    border: 1px solid #444; /* Optional: Add border around results */
-    border-radius: 6px;
-    background-color: var(--card-bg-dark); /* Background for list */
-}
-
-@media (prefers-color-scheme: light) {
-    .manual-list {
-        border: 1px solid #ddd;
-        background-color: var(--card-bg-light);
-    }
-}
-
-
-.manual-list-item {
-    padding: 0.8rem 1rem; /* Adjust padding */
-    border-bottom: 1px solid #444;
-}
-.manual-list-item:last-child {
-    border-bottom: none;
-}
-
-@media (prefers-color-scheme: light) {
-    .manual-list-item {
-        border-bottom: 1px solid #eee;
-    }
-}
-
-.manual-list-item a {
+/* Style the main title */
+.manual-list-page > h1 {
+    width: 100%;
+    max-width: 1400px;
+    text-align: center;
+    margin-bottom: 1.5rem;
     color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.1em;
+    flex-shrink: 0;
 }
 
-.manual-list-item a:hover {
-    text-decoration: underline;
+/* Container for the two columns */
+.main-content-columns {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1400px;
+    flex-grow: 1; /* Allow columns container to fill remaining height */
+    gap: 2rem;
+    overflow: hidden; /* Important: prevent this container from overflowing */
+    margin-bottom: 1rem; /* Add some space at the bottom */
 }
 
-/* Hiding source path for now */
-/* .manual-source { ... } */
+/* Shared column styles */
+.column {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background-color: var(--card-bg-dark);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: hidden; /* Prevent content overflow */
+}
 
+/* Specific column widths */
+.search-section.column {
+    flex-basis: 33.33%; /* Approximately 1/3 */
+    flex-shrink: 0;
+}
 
-.no-results, .search-prompt {
-    text-align: center;
-    color: #888;
-    padding: 2rem;
-    font-style: italic;
-    margin-top: 1.5rem; /* Add margin like results container */
+.qa-container.column {
+    flex-basis: 63%; /* Approximately 2/3 */
+    flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: light) {
-    .no-results, .search-prompt {
-        color: #666;
-    }
+  .manual-list-page { background-color: var(--background-color-light); }
+  .column {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
 }
 
-/* Re-use loading/error message styles if defined globally, or add basic ones */
-.loading-message, .error-message {
-    text-align: center;
-    padding: 2rem;
-    font-style: italic;
-}
-.error-message {
-    color: #ff6b6b; /* Light red */
-}
+/* --- QA Section Styles --- */
+.qa-container { padding: 0; margin: 0; background: none; box-shadow: none; border-radius: 0; }
+.qa-container h2 { margin-top: 0; margin-bottom: 1rem; color: var(--primary-color); font-size: 1.5em; padding-bottom: 0.5rem; flex-shrink: 0; }
+.qa-form { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; flex-shrink: 0; }
+.qa-input { width: 100%; padding: 0.8em 1em; font-size: 1em; border-radius: 6px; border: 1px solid #555; background-color: #333; color: inherit; box-sizing: border-box; resize: vertical; min-height: 80px; font-family: inherit; }
+.qa-submit-button { margin: 0; padding: 0.7em 1.5em; font-size: 1em; font-weight: 500; border-radius: 6px; cursor: pointer; border: 1px solid var(--primary-color); background-color: var(--primary-color); color: #fff; transition: background-color 0.2s, border-color 0.2s; align-self: flex-end; }
+.qa-submit-button:hover:not(:disabled) { background-color: #535bf2; }
+.qa-submit-button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Area for QA results - allow scrolling */
+.qa-results-area { margin-top: 1.5rem; flex-grow: 1; overflow-y: auto; text-align: left; }
+.qa-answer { padding: 1rem; background-color: rgba(0, 0, 0, 0.1); border-radius: 6px; white-space: pre-wrap; margin-bottom: 1rem; /* Space between answers if multiple were shown */ }
+.qa-answer h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1em; color: var(--primary-color); }
 @media (prefers-color-scheme: light) {
-    .error-message {
-        color: #e53e3e; /* Darker red */
-    }
+    .qa-input { border: 1px solid #ccc; background-color: #fff; }
+    .qa-answer { background-color: rgba(0, 0, 0, 0.05); }
 }
+/* --- End QA Section Styles --- */
+
+
+/* --- Search Section Styles --- */
+.search-section { padding: 0; margin: 0; background: none; box-shadow: none; border-radius: 0; }
+.search-section h2 { margin-top: 0; margin-bottom: 1rem; font-size: 1.5em; flex-shrink: 0; }
+.search-container { margin-bottom: 1.5rem; flex-shrink: 0; }
+.search-input { padding: 0.8em 1.2em; font-size: 1.1em; border-radius: 6px; border: 1px solid #555; background-color: #333; color: inherit; width: 100%; box-sizing: border-box; }
+@media (prefers-color-scheme: light) { .search-input { border: 1px solid #ccc; background-color: #fff; } }
+
+/* Area for Search results - allow scrolling */
+.results-area {
+    margin-top: 1.5rem;
+    flex-grow: 1; /* Allow results to fill space */
+    overflow-y: auto; /* Allow scrolling for long list */
+    text-align: left;
+}
+
+.results-container { /* This might be redundant now */ }
+.manual-list { list-style: none; padding: 0; margin: 0; }
+.manual-list-item { padding: 0.6rem 0.5rem; }
+.manual-list-item a { color: var(--primary-color); text-decoration: none; font-weight: 500; font-size: 1.1em; }
+.manual-list-item a:hover { text-decoration: underline; }
+
+.no-results, .search-prompt { text-align: center; color: #888; padding: 2rem; font-style: italic; margin-top: 0; /* Remove margin if inside results-area */ }
+@media (prefers-color-scheme: light) { .no-results, .search-prompt { color: #666; } }
+
+.loading-message, .error-message { text-align: center; padding: 2rem; font-style: italic; }
+.error-message { color: #ff6b6b; }
+@media (prefers-color-scheme: light) { .error-message { color: #e53e3e; } }
+
+/* --- Gemini-like Loading Animation (for QA) --- */
+.gemini-loader { display: flex; justify-content: center; align-items: center; padding: 2rem; }
+.gemini-loader div { width: 10px; height: 10px; margin: 0 4px; background-color: var(--primary-color); border-radius: 50%; animation: gemini-pulse 1.4s infinite ease-in-out both; }
+.gemini-loader div:nth-child(1) { animation-delay: -0.32s; }
+.gemini-loader div:nth-child(2) { animation-delay: -0.16s; }
+@keyframes gemini-pulse { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1.0); opacity: 1; } }
+/* --- End Loading Animation --- */
