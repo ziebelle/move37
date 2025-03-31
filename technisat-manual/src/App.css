@@ -2,21 +2,18 @@
 /* h2 { margin: 0; } */
 
 .App {
-  /* Fill viewport */
   width: 100%;
   height: 100%;
-  /* Remove constraints */
   max-width: none;
   margin: 0;
-  padding: 0; /* Remove padding */
-  border-radius: 0; /* Remove border-radius */
-  box-shadow: none; /* Remove box-shadow */
-  /* Layout */
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   text-align: left;
-  background-color: var(--card-bg-dark); /* Keep background */
-  overflow: hidden; /* Prevent App itself from scrolling */
+  background-color: var(--card-bg-dark);
+  overflow: hidden;
 }
 
 @media (prefers-color-scheme: light) {
@@ -27,10 +24,10 @@
 
 header {
   text-align: center;
-  padding: 1rem 1rem 0 1rem; /* Adjust padding, remove bottom padding */
-  border-bottom: 1px solid #444; /* Separator below tabs */
-  flex-shrink: 0; /* Prevent shrinking */
-  margin-bottom: 0; /* Remove margin */
+  padding: 1rem 1rem 0 1rem;
+  border-bottom: 1px solid #444;
+  flex-shrink: 0;
+  margin-bottom: 0;
 }
 
 @media (prefers-color-scheme: light) {
@@ -42,22 +39,22 @@ header {
 /* Tab Navigation Styles */
 .tabs {
   display: flex;
-  justify-content: center; /* Center tabs */
-  margin-top: 1rem; /* Space below title */
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .tab {
   padding: 0.6em 1.2em;
-  margin: 0 0.2em; /* Small gap between tabs */
-  border: none; /* Remove default button border */
-  border-bottom: 3px solid transparent; /* Placeholder for active indicator */
-  background-color: transparent; /* Remove default button background */
-  color: inherit; /* Use default text color */
+  margin: 0 0.2em;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background-color: transparent;
+  color: inherit;
   font-size: 1em;
   font-weight: 500;
   cursor: pointer;
   transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  border-radius: 4px 4px 0 0; /* Slightly rounded top corners */
+  border-radius: 4px 4px 0 0;
 }
 
 .tab:hover {
@@ -72,167 +69,225 @@ header {
 
 
 main {
-  flex-grow: 1; /* Take remaining space */
-  overflow-y: auto; /* Allow scrolling within main content */
-  padding: 2rem; /* Add padding inside main */
-  display: flex; /* Use flexbox to manage sections */
-  flex-direction: column; /* Stack sections vertically */
+  flex-grow: 1;
+  /* Remove padding from main, apply to specific content areas if needed */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent main from scrolling, handle inside */
 }
 
-/* Hide product info for now to focus on presentation layout */
+/* Hide product info */
 #product-info {
   display: none;
 }
 
+/* Installation guide section takes all available space in main */
 #installation-guide {
-  /* Remove old box styling */
   margin-bottom: 0;
   padding: 0;
   border: none;
   border-radius: 0;
-  /* Layout for slide content */
-  flex-grow: 1; /* Allow guide to fill main if product-info is hidden */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent this section from scrolling */
 }
 
-
-@media (prefers-color-scheme: light) {
-  #installation-guide {
-    /* No border needed */
-  }
-}
-
-/* Container for the actual step content */
+/* Container for the step content area */
 .steps-container {
   margin-bottom: 0;
-  padding: 0;
+  padding: 0; /* Remove padding */
   background-color: transparent;
   border-radius: 0;
   min-height: auto;
   flex-grow: 1; /* Make content area fill space */
-  overflow-y: auto; /* Allow scrolling within steps if needed */
-  padding: 1rem 0; /* Add some vertical padding */
-}
-
-@media (prefers-color-scheme: light) {
-  .steps-container {
-     background-color: transparent;
-  }
+  display: flex; /* Use flex to allow content to fill height */
+  flex-direction: column;
+  overflow: hidden; /* Prevent scrolling here, handle inside .step-content */
 }
 
 .step-content { /* General styling for content area */
-    /* Add padding or other styles if needed */
-}
-
-.step-content.single-step .step-text-image {
-    display: flex;
+    flex-grow: 1; /* Allow content to fill steps-container */
+    display: flex; /* Use flex for layout */
     flex-direction: column;
-    align-items: center; /* Center text and image */
-    text-align: center;
+    overflow-y: auto; /* Allow scrolling within the content if needed */
+    padding: 1rem 2rem; /* Add padding here instead of main */
 }
 
-.step-content ol, .step-content ul {
+/* Specific styles for single step view */
+.step-content.single-step {
+    padding: 0; /* Remove padding for split layout */
+    overflow: hidden; /* Prevent scrolling, handle in halves */
+}
+
+/* Split Layout Styles */
+.split-layout {
+    display: flex;
+    flex-grow: 1; /* Fill available space */
+    width: 100%;
+    height: 100%; /* Fill height of steps-container */
+}
+
+.text-half, .image-half {
+    width: 50%;
+    height: 100%;
+    overflow-y: auto; /* Allow scrolling within each half */
+    padding: 2rem; /* Add padding inside halves */
+    box-sizing: border-box; /* Include padding in width/height */
+    display: flex; /* Center content vertically */
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+}
+
+.text-half {
+    align-items: flex-start; /* Align text to the start */
+    text-align: left;
+}
+.text-half p {
+    font-size: 2em; /* Increased font size */
+    line-height: 1.2;
+}
+.text-half p span { /* Style the step number */
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+
+
+.image-half {
+    align-items: center; /* Center image horizontally */
+    padding: 0; /* Less padding for image */
+}
+
+/* Alternating layout using order */
+.split-layout.layout-image-right .text-half {
+    order: 1;
+}
+.split-layout.layout-image-right .image-half {
+    order: 2;
+}
+
+.split-layout.layout-image-left .text-half {
+    order: 2;
+}
+.split-layout.layout-image-left .image-half {
+    order: 1;
+}
+/* End Split Layout Styles */
+
+
+/* Styles for list content (like Sys Req) */
+.step-content.list-content ul {
   padding-left: 25px;
-  list-style-position: inside; /* Keep numbers/bullets inside padding */
+  list-style-position: inside;
 }
-
-.step-content li {
-  margin-bottom: 1.5em; /* Increase spacing */
+.step-content.list-content li {
+  margin-bottom: 0.8em;
   line-height: 1.6;
 }
 
-.warning {
-  color: #ffcc00; /* Amber/Yellow */
-  background-color: rgba(255, 204, 0, 0.1);
-  border-left: 4px solid #ffcc00;
-  padding: 0.8em 1em;
-  margin: 1em 0; /* Adjust margin */
-  border-radius: 4px;
+/* Styles for single text content (like Launch App) */
+.step-content.single-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2em;
 }
 
+
+.warning, .note {
+  padding: 0.8em 1em;
+  margin: 1em 2rem; /* Add horizontal margin to match content padding */
+  border-radius: 4px;
+  flex-shrink: 0; /* Prevent shrinking if inside flex */
+}
+.warning {
+  color: #ffcc00;
+  background-color: rgba(255, 204, 0, 0.1);
+  border-left: 4px solid #ffcc00;
+  margin: 0;
+  border-radius: 0;
+}
 .note {
-  color: #aaa; /* Lighter gray */
+  color: #aaa;
   background-color: rgba(170, 170, 170, 0.1);
   border-left: 4px solid #aaa;
-  padding: 0.8em 1em;
-  margin: 1em 0; /* Adjust margin */
-  border-radius: 4px;
   font-style: italic;
 }
 
 @media (prefers-color-scheme: light) {
-    .warning {
-        color: #c79100;
-        background-color: #fffbeb;
-        border-left-color: #ffcc00;
-    }
-    .note {
-        color: #555;
-        background-color: #f0f0f0;
-        border-left-color: #aaa;
-    }
+    .warning { color: #c79100; background-color: #fffbeb; border-left-color: #ffcc00; }
+    .note { color: #555; background-color: #f0f0f0; border-left-color: #aaa; }
 }
 
-/* Navigation container for buttons and progress */
+/* Navigation container */
 .navigation-buttons {
   display: flex;
-  justify-content: space-between; /* Pushes Back/Next to ends, centers progress */
-  align-items: center; /* Vertically align items */
-  margin-top: 1rem;
-  padding-top: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0; /* Remove margin */
+  padding: 1rem 2rem; /* Add padding */
   border-top: 1px solid #444;
   flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: light) {
-    .navigation-buttons {
-        border-top: 1px solid #ddd;
-    }
+    .navigation-buttons { border-top: 1px solid #ddd; }
 }
 
 .progress-indicator {
     text-align: center;
-    /* margin-top: 0.5rem; Removed margin-top */
     color: #aaa;
     font-size: 0.9em;
     flex-shrink: 0;
-    /* Add some horizontal margin if needed */
-    /* margin-left: 1rem; */
-    /* margin-right: 1rem; */
 }
 
 @media (prefers-color-scheme: light) {
-    .progress-indicator {
-        color: #555;
-    }
+    .progress-indicator { color: #555; }
 }
 
 
-footer {
-  text-align: center;
-  padding: 0.5rem; /* Reduce padding */
-  border-top: 1px solid #555;
-  color: #aaa;
-  font-size: 0.8em; /* Smaller font */
-  flex-shrink: 0; /* Prevent shrinking */
-  margin-top: 0; /* Remove margin */
-}
+/* Footer removed from App.tsx, styles can be removed or kept */
+/* footer { ... } */
 
-@media (prefers-color-scheme: light) {
-    footer {
-        border-top: 1px solid #ccc;
-        color: #777;
-    }
-}
-
-/* Adjusted styles for step images in presentation mode */
+/* Image styles within split layout */
 .step-image {
   display: block;
-  max-width: 70%; /* Further reduce max width */
-  max-height: 55vh; /* Further reduce max height */
-  height: auto;
-  margin: 1.5em auto; /* More vertical spacing, centered */
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%; /* Fill the image half width */
+  height: 100%; /* Fill the image half height */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* Scale image to cover container */
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #888;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    font-style: italic;
+}
+@media (prefers-color-scheme: light) {
+    .image-placeholder {
+        color: #666;
+        background-color: rgba(0,0,0,0.05);
+    }
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
 }

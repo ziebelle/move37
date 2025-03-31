@@ -35,6 +35,7 @@ function App() {
   const [sections, setSections] = useState<SectionInfo[]>([]);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [currentSubStepIndex, setCurrentSubStepIndex] = useState(0);
+  const [imageError, setImageError] = useState(false); // State for image loading error
 
   // Load and structure data on mount
   useEffect(() => {
@@ -55,6 +56,12 @@ function App() {
     setActiveSectionIndex(firstStepSectionIndex >= 0 ? firstStepSectionIndex : 0);
 
   }, []);
+
+  // Reset image error state when section or step changes
+  useEffect(() => {
+    setImageError(false);
+  }, [activeSectionIndex, currentSubStepIndex]);
+
 
   // --- Navigation Logic ---
   const activeSection = sections[activeSectionIndex];
@@ -79,12 +86,34 @@ function App() {
     setCurrentSubStepIndex(0); // Reset sub-step when changing section
   };
 
+  // --- Keyboard Navigation ---
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only navigate if the active section has sub-steps
+      if (activeSection?.hasSubSteps) {
+        if (event.key === 'ArrowRight') {
+          nextSubStep();
+        } else if (event.key === 'ArrowLeft') {
+          prevSubStep();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeSection, currentSubStepIndex, stepsInCurrentSection]); // Re-bind if activeSection or step changes (needed for hasSubSteps check)
+
+
   // --- Rendering Logic ---
 
-  // Function to handle image loading errors
-  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.style.display = 'none'; // Hide broken image
-    console.warn(`Image not found or failed to load: ${event.currentTarget.src}`);
+  // Function to handle image loading errors - now just sets state
+  const handleImageError = () => {
+    console.warn(`Image not found or failed to load.`); // Keep warning
+    setImageError(true);
   };
 
   const renderActiveSectionContent = () => {
@@ -93,28 +122,45 @@ function App() {
     const { content, hasSubSteps, imageKey } = activeSection;
 
     if (hasSubSteps && 'steps' in content) {
-      // Render current sub-step with image
+      // Render current sub-step with image in split layout
       const stepText = content.steps[currentSubStepIndex];
       const imagePath = imageKey
         ? `/manual_images/${imageKey}_step_${String(currentSubStepIndex + 1).padStart(2, '0')}.png`
         : null;
+      const isEvenStep = currentSubStepIndex % 2 === 0; // 0-based index
+      const layoutClass = isEvenStep ? 'layout-image-right' : 'layout-image-left';
+
+      // Add key to force re-render and potentially re-trigger animation
+      const animationKey = `${activeSectionIndex}-${currentSubStepIndex}`;
 
       return (
-        <div className="step-content single-step">
-          {/* Display warning/note only if relevant to the current step? Or always for the section? Let's show always for now */}
+        // Add key here for animation trigger
+        <div key={animationKey} className="step-content single-step animate-fade-in">
+          {/* Warning/Note outside the split layout */}
           {content.warning && currentSubStepIndex === 0 && <p className="warning"><strong>Warning:</strong> {content.warning}</p>}
-          <div className="step-text-image">
-            <p>{currentSubStepIndex + 1}. {stepText}</p>
-            {imagePath && (
-              <img
-                key={imagePath} // Add key to force re-render on change
-                src={imagePath}
-                alt={`Illustration for ${imageKey} step ${currentSubStepIndex + 1}`}
-                className="step-image"
-                onError={handleImageError}
-              />
-            )}
+
+          <div className={`split-layout ${layoutClass}`}>
+            <div className="text-half">
+              <p><span>{currentSubStepIndex + 1}.</span> {stepText}</p>
+            </div>
+            <div className="image-half">
+              {imagePath && !imageError ? ( // Conditionally render image based on state
+                  <img
+                    key={imagePath} // Add key to force re-render on change
+                    src={imagePath}
+                    alt={`Illustration for ${imageKey} step ${currentSubStepIndex + 1}`}
+                    className="step-image"
+                    onError={handleImageError} // Set error state on failure
+                  />
+              ) : (
+                 // Show placeholder if no image path or if error occurred
+                 <div className="image-placeholder">
+                    {imagePath ? 'Image not available' : 'No image for this step'}
+                 </div>
+              )}
+            </div>
           </div>
+
           {content.note && currentSubStepIndex === content.steps.length - 1 && <p className="note"><em>Note:</em> {content.note}</p>}
         </div>
       );
@@ -163,6 +209,7 @@ function App() {
 
       <main>
         {/* Render only the active section's content */}
+        {/* steps-container needs to allow split-layout to fill height */}
         <div className="steps-container">
           {renderActiveSectionContent()}
         </div>
@@ -176,7 +223,6 @@ function App() {
             {/* Moved progress indicator inside */}
             <div className="progress-indicator">
               Step {currentSubStepIndex + 1} of {stepsInCurrentSection}
-              {/* Optionally add section title back if needed: in {activeSection.title} */}
             </div>
             <button onClick={nextSubStep} disabled={currentSubStepIndex === stepsInCurrentSection - 1}>
               Next
@@ -185,9 +231,7 @@ function App() {
         )}
       </main>
 
-      <footer>
-        <p>Interactive Manual</p>
-      </footer>
+      {/* Footer removed */}
     </div>
   );
 }
